@@ -1,17 +1,14 @@
-import {Channel, MessageEmbed} from "discord.js";
+import { Channel, MessageEmbed, TextBasedChannels } from "discord.js";
 
 interface Options {
-  message?:{
-    content?: string
-    author?:{
-      name?: string
-    }
+  message?: {
+    content?: string;
     image?: {
-      url?: string
-    }
-  }
+      url?: string;
+    };
+  };
 }
-  
+
 export async function sendLog(
   /**
    * A target log channel that stores log messages.
@@ -24,23 +21,18 @@ export async function sendLog(
   options?: Options
 ): Promise<void> {
   if (targetChannel?.isText()) {
-    const embed = new MessageEmbed().setTitle(text).setTimestamp();
-    
-    if(options) {
-      const {message} = options
-      
-      if(message?.author?.name){
-        embed.addField('Author', `<@${message?.author?.name}>`)
+    const embed = new MessageEmbed().setDescription(text);
+
+    if (options) {
+      const { message } = options;
+      if (message?.content) {
+        embed.addField("Content", message.content);
       }
-      if(message?.content){
-        embed.addField('Content',message.content)
-      }
-      if(message?.image?.url) {
-        embed.setImage(message?.image?.url)
+      if (message?.image?.url) {
+        embed.setImage(message?.image?.url);
       }
     }
-
+    console.log(embed);
     await targetChannel.send({ embeds: [embed] });
   }
 }
-  
